@@ -1,0 +1,40 @@
+# Портал документации (arba/docs) в окружении dev.
+# Строки с маркером "bot:" обновляет CI сервиса (scripts/bump.sh), остальное правят люди.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dev-arba-docs
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: arba
+  source:
+    repoURL: http://gitlab.arba.kz/arba/docs.git
+    targetRevision: main # bot:revision
+    path: .helm
+    helm:
+      releaseName: arba-docs
+      valuesObject:
+        global:
+          env: dev
+          tier: platform
+        image:
+          repository: registry.arba.kz/arba/docs
+          tag: "sha-0000000" # bot:tag
+          digest: "" # bot:digest
+        ingress:
+          enabled: true
+          host: docs.dev.arba.kz
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+    retry:
+      limit: 5
+      backoff: { duration: 10s, factor: 2, maxDuration: 3m }

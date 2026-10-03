@@ -1,0 +1,21 @@
+# Корневое приложение: следит за папкой dev/ этого репо и создаёт по Application на каждый файл.
+# Применяется один раз вручную (kubectl apply / 15-argocd-dev.ps1), дальше всё через git.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-dev
+  namespace: argocd
+spec:
+  project: arba
+  source:
+    repoURL: http://gitlab.arba.kz/argocd/argocd-dev.git
+    targetRevision: main
+    path: dev
+    directory:
+      recurse: true
+      include: "*.yml"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
