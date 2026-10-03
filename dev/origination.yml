@@ -1,0 +1,42 @@
+# Движок origination (arba/engines/origination) в окружении dev.
+# Строки с маркером "bot:" обновляет CI сервиса (scripts/bump.sh), остальное правят люди.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dev-origination
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: arba
+  source:
+    repoURL: http://gitlab.arba.kz/arba/engines/origination.git
+    targetRevision: main # bot:revision
+    path: .helm
+    helm:
+      releaseName: origination
+      valuesObject:
+        global:
+          env: dev
+          tier: engine
+        image:
+          repository: registry.arba.kz/arba/engines/origination
+          tag: "0.0.0" # bot:tag
+          digest: "" # bot:digest
+        replicaCount: 1
+        worker:
+          enabled: false
+        migrate:
+          enabled: false
+        env:
+          LOG_LEVEL: debug
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 5
+      backoff: { duration: 10s, factor: 2, maxDuration: 3m }
