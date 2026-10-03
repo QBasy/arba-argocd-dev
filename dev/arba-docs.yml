@@ -21,7 +21,7 @@ spec:
           tier: platform
         image:
           repository: registry.arba.kz/arba/docs
-          tag: "sha-0000000" # bot:tag
+          tag: "0.0.3" # bot:tag
           digest: "" # bot:digest
         ingress:
           enabled: true
