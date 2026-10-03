@@ -1,0 +1,20 @@
+# Проект для платформенных зависимостей (Vault, операторы, БД, брокер): им нужны CRD и cluster-scoped ресурсы.
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform
+  namespace: argocd
+spec:
+  description: Платформенные зависимости dev (Vault, ESO, CloudNativePG, NATS)
+  sourceRepos:
+    - http://gitlab.arba.kz/argocd/**
+    - https://helm.releases.hashicorp.com
+    - https://charts.external-secrets.io
+    - https://cloudnative-pg.github.io/charts
+    - https://nats-io.github.io/k8s/helm/charts
+  destinations:
+    - { namespace: "*", server: https://kubernetes.default.svc }
+  clusterResourceWhitelist:
+    - { group: "*", kind: "*" }
+  namespaceResourceWhitelist:
+    - { group: "*", kind: "*" }

@@ -5,6 +5,7 @@ kind: Application
 metadata:
   name: dev-origination
   namespace: argocd
+  annotations: { argocd.argoproj.io/sync-wave: "5" }   # после Vault, БД и брокера
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -27,9 +28,17 @@ spec:
         worker:
           enabled: false
         migrate:
-          enabled: false
+          enabled: true                       # PreSync Job: cmd/migrate up
+        # переменные приложения читаются с префиксом ORIGINATION_ (kit/conf): ORIGINATION_<СЕКЦИЯ>_<ПОЛЕ>
         env:
-          LOG_LEVEL: debug
+          ORIGINATION_LOG_LEVEL: debug
+          ORIGINATION_NATS_URL: nats://nats.broker.svc.cluster.local:4222
+          # JWT: провайдера (identity) в кластере пока нет, значения-заглушки
+          ORIGINATION_JWT_JWKS_URL: http://identity.dev.svc.cluster.local/.well-known/jwks.json
+          ORIGINATION_JWT_ISSUER: http://identity.dev.arba.kz
+          ORIGINATION_JWT_AUDIENCE: arba
+        secretEnv:
+          - { name: ORIGINATION_DATABASE_DSN, secret: origination-db, key: dsn }
   destination:
     server: https://kubernetes.default.svc
     namespace: dev

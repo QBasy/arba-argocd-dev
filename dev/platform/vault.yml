@@ -1,0 +1,45 @@
+# HashiCorp Vault: standalone, данные на PVC. После первого запуска: .\19-vault.ps1 (init, unseal, настройка).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-vault
+  namespace: argocd
+  annotations: { argocd.argoproj.io/sync-wave: "0" }
+spec:
+  project: platform
+  source:
+    repoURL: https://helm.releases.hashicorp.com
+    chart: vault
+    targetRevision: 0.34.1
+    helm:
+      releaseName: vault
+      valuesObject:
+        global: { tlsDisable: true }
+        injector: { enabled: false }          # секреты доставляет External Secrets, а не sidecar
+        ui: { enabled: true }
+        server:
+          resources:
+            requests: { cpu: 50m, memory: 128Mi }
+            limits: { memory: 256Mi }
+          dataStorage: { enabled: true, size: 1Gi }
+          standalone:
+            enabled: true
+            config: |
+              ui = true
+              listener "tcp" {
+                tls_disable     = 1
+                address         = "[::]:8200"
+                cluster_address = "[::]:8201"
+              }
+              storage "file" {
+                path = "/vault/data"
+              }
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            hosts:
+              - { host: vault.arba.kz, paths: [] }
+  destination: { server: https://kubernetes.default.svc, namespace: vault }
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [CreateNamespace=true]

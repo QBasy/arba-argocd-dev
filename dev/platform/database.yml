@@ -1,0 +1,17 @@
+# PostgreSQL для origination (CloudNativePG Cluster в namespace database).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-database
+  namespace: argocd
+  annotations: { argocd.argoproj.io/sync-wave: "3" }
+spec:
+  project: platform
+  source:
+    repoURL: http://gitlab.arba.kz/argocd/argocd-dev.git
+    targetRevision: main
+    path: manifests/database
+  destination: { server: https://kubernetes.default.svc, namespace: database }
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [SkipDryRunOnMissingResource=true]

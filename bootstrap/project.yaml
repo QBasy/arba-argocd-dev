@@ -6,8 +6,8 @@ metadata:
 spec:
   description: Сервисы Arba
   sourceRepos:
-    - http://gitlab.arba.kz/arba/*
-    - http://gitlab.arba.kz/argocd/*
+    - http://gitlab.arba.kz/arba/**   # ** — чтобы подходили вложенные группы (arba/engines/...)
+    - http://gitlab.arba.kz/argocd/**
   destinations:
     - { namespace: dev, server: https://kubernetes.default.svc }
     - { namespace: argocd, server: https://kubernetes.default.svc }

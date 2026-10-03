@@ -1,0 +1,26 @@
+# NATS с JetStream (один узел для dev). Адрес: nats://nats.broker.svc.cluster.local:4222
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-nats
+  namespace: argocd
+  annotations: { argocd.argoproj.io/sync-wave: "1" }
+spec:
+  project: platform
+  source:
+    repoURL: https://nats-io.github.io/k8s/helm/charts
+    chart: nats
+    targetRevision: 2.15.0
+    helm:
+      releaseName: nats
+      valuesObject:
+        config:
+          cluster: { enabled: false }
+          jetstream:
+            enabled: true
+            fileStore:
+              pvc: { size: 2Gi }
+  destination: { server: https://kubernetes.default.svc, namespace: broker }
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [ServerSideApply=true]
