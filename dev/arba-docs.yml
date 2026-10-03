@@ -11,7 +11,7 @@ spec:
   project: arba
   source:
     repoURL: http://gitlab.arba.kz/arba/docs.git
-    targetRevision: f7e7831de9cfc9d791934bdcb9a00074181c829d # bot:revision
+    targetRevision: afdaed5636be9e106ec7a79a75b5e3c143f35578 # bot:revision
     path: .helm
     helm:
       releaseName: arba-docs
@@ -21,8 +21,8 @@ spec:
           tier: platform
         image:
           repository: registry.arba.kz/arba/docs
-          tag: "v0.0.4" # bot:tag
-          digest: "sha256:cf8bd2a471912c18ec67b9f1d0ab36afce97370306fc8589a718d8a8f000a0d1" # bot:digest
+          tag: "v0.0.5" # bot:tag
+          digest: "sha256:18917ca46b4b8bcdb3b22e1c6dba65d49e69398efc0f34417235abb56cbac1df" # bot:digest
         ingress:
           enabled: true
           host: docs.dev.arba.kz
