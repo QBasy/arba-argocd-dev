@@ -21,8 +21,8 @@ spec:
           tier: platform
         image:
           repository: registry.arba.kz/arba/docs
-          tag: "v0.0.6" # bot:tag
-          digest: "sha256:c8f587fcf33f8b1cd9b2814d6520ef316599e7a9b4ad867ae2c38973e0792070" # bot:digest
+          tag: "v0.1.0" # bot:tag
+          digest: "sha256:57e77797930d553cf0e02aba3bd9028fdf683d83aadb3af875fbcc72c890b053" # bot:digest
         ingress:
           enabled: true
           host: docs.dev.arba.kz
