@@ -1,0 +1,16 @@
+# Заглушка identity (пустой JWKS). Убрать, когда появится настоящий identity-провайдер.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dev-identity-stub
+  namespace: argocd
+  annotations: { argocd.argoproj.io/sync-wave: "4" }
+spec:
+  project: arba
+  source:
+    repoURL: http://gitlab.arba.kz/argocd/argocd-dev.git
+    targetRevision: main
+    path: manifests/identity-stub
+  destination: { server: https://kubernetes.default.svc, namespace: dev }
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }

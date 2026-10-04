@@ -1,0 +1,48 @@
+# ВРЕМЕННАЯ заглушка identity-провайдера: отдаёт пустой JWKS, чтобы сервисы с jwtauth могли стартовать.
+# Заменить настоящим identity (Keycloak/свой сервис) под тем же именем Service: identity.dev.svc.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: identity-stub
+  namespace: dev
+data:
+  jwks.json: '{"keys":[]}'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identity-stub
+  namespace: dev
+  labels: { app.kubernetes.io/name: identity-stub }
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app.kubernetes.io/name: identity-stub }
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: identity-stub
+        arba.kz/tier: dep          # разрешён входящий трафик из namespace dev (NetworkPolicy allow-same-namespace-dependencies)
+    spec:
+      containers:
+        - name: nginx
+          image: nginxinc/nginx-unprivileged:1.27-alpine
+          ports: [{ name: http, containerPort: 8080 }]
+          readinessProbe: { httpGet: { path: /.well-known/jwks.json, port: http }, periodSeconds: 5 }
+          resources:
+            requests: { cpu: 5m, memory: 16Mi }
+            limits: { memory: 64Mi }
+          volumeMounts:
+            - { name: jwks, mountPath: /usr/share/nginx/html/.well-known/jwks.json, subPath: jwks.json, readOnly: true }
+      volumes:
+        - name: jwks
+          configMap: { name: identity-stub }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: identity
+  namespace: dev
+spec:
+  selector: { app.kubernetes.io/name: identity-stub }
+  ports: [{ name: http, port: 80, targetPort: http }]
