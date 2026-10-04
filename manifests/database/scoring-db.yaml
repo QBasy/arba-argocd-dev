@@ -1,0 +1,17 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: scoring-db
+  namespace: database
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:17
+  storage: { size: 5Gi }
+  resources:
+    requests: { cpu: 100m, memory: 256Mi }
+    limits: { memory: 512Mi }
+  bootstrap:
+    initdb:
+      database: scoring
+      owner: scoring
+      secret: { name: scoring-db-credentials }
