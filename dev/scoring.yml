@@ -1,0 +1,44 @@
+# Application сервиса scoring в dev. Создан автоматически (scripts/new-service.sh); строки с "bot:" обновляет CI.
+# Настройки сервиса под окружение dev лежат В РЕПОЗИТОРИИ СЕРВИСА: .helm/values-dev.yaml (необязательный файл).
+# Общие значения окружения (NATS, JWT, ...): values/dev-common.yaml в этом репозитории.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dev-scoring
+  namespace: argocd
+  annotations: { argocd.argoproj.io/sync-wave: "5" }
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: arba
+  sources:
+    - repoURL: http://gitlab.arba.kz/arba/engines/scoring.git
+      targetRevision: c89bf6bbea6ab5c3d8f13856c2def8d010ae5dc4 # bot:revision
+      path: .helm
+      helm:
+        releaseName: scoring
+        ignoreMissingValueFiles: true
+        valueFiles:
+          - $platform/values/dev-common.yaml
+          - values-dev.yaml
+        valuesObject:
+          global:
+            env: dev
+            tier: engine
+          image:
+            repository: registry.arba.kz/arba/engines/scoring
+            tag: "v0.1.1" # bot:tag
+            digest: "sha256:00d447cf592dda8cbfa0dc57cd17296e3891595d7e16a078a84ef544cb605871" # bot:digest
+    - repoURL: http://gitlab.arba.kz/argocd/argocd-dev.git
+      targetRevision: main
+      ref: platform
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 5
+      backoff: { duration: 10s, factor: 2, maxDuration: 3m }
