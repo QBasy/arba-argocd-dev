@@ -1,0 +1,44 @@
+# Application сервиса pricing в dev. Создан автоматически (scripts/new-service.sh); строки с "bot:" обновляет CI.
+# Настройки сервиса под окружение dev лежат В РЕПОЗИТОРИИ СЕРВИСА: .helm/values-dev.yaml (необязательный файл).
+# Общие значения окружения (NATS, JWT, ...): values/dev-common.yaml в этом репозитории.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dev-pricing
+  namespace: argocd
+  annotations: { argocd.argoproj.io/sync-wave: "5" }
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: arba
+  sources:
+    - repoURL: http://gitlab.arba.kz/arba/engines/pricing.git
+      targetRevision: c3a98e8af27b8b83c3cddc4e58c2c4aa8d1298fa # bot:revision
+      path: .helm
+      helm:
+        releaseName: pricing
+        ignoreMissingValueFiles: true
+        valueFiles:
+          - $platform/values/dev-common.yaml
+          - values-dev.yaml
+        valuesObject:
+          global:
+            env: dev
+            tier: engine
+          image:
+            repository: registry.arba.kz/arba/engines/pricing
+            tag: "v0.1.0" # bot:tag
+            digest: "sha256:c8405aae702b781360a6b482310353d80b7be219874e7a0e6fc26aab119037bc" # bot:digest
+    - repoURL: http://gitlab.arba.kz/argocd/argocd-dev.git
+      targetRevision: main
+      ref: platform
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 5
+      backoff: { duration: 10s, factor: 2, maxDuration: 3m }
