@@ -1,17 +1,34 @@
+# Общий PostgreSQL для всех сервисов dev (CloudNativePG, namespace database).
+# Один кластер, у каждого сервиса своя БД + своя роль (Database-ресурсы лежат рядом: <сервис>.yaml,
+# пароли ролей приходят из Vault через ExternalSecret <сервис>-db-credentials).
+# Новый сервис: sh scripts/new-database.sh <имя> — добавит роль (между маркерами ниже), Database и ExternalSecret'ы.
+# prod: поставить instances: 3 (1 primary + 2 реплики, автоматический failover).
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: origination-db
+  name: platform-db
   namespace: database
+  annotations: { argocd.argoproj.io/sync-wave: "0" }
 spec:
   instances: 1
   imageName: ghcr.io/cloudnative-pg/postgresql:17
-  storage: { size: 5Gi }
+  storage: { size: 10Gi }
   resources:
     requests: { cpu: 100m, memory: 256Mi }
-    limits: { memory: 512Mi }
+    limits: { memory: 768Mi }
   bootstrap:
     initdb:
-      database: origination
-      owner: origination
-      secret: { name: origination-db-credentials }
+      database: app
+      owner: app
+  managed:
+    roles:
+      # bot:roles:begin
+      - name: origination
+        ensure: present
+        login: true
+        passwordSecret: { name: origination-db-credentials }
+      - name: scoring
+        ensure: present
+        login: true
+        passwordSecret: { name: scoring-db-credentials }
+      # bot:roles:end

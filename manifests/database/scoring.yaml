@@ -1,0 +1,11 @@
+# База scoring в общем кластере platform-db (владелец — одноимённая роль).
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: scoring
+  namespace: database
+  annotations: { argocd.argoproj.io/sync-wave: "1" }
+spec:
+  name: scoring
+  owner: scoring
+  cluster: { name: platform-db }

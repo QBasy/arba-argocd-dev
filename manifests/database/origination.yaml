@@ -1,0 +1,11 @@
+# База origination в общем кластере platform-db (владелец — одноимённая роль).
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: origination
+  namespace: database
+  annotations: { argocd.argoproj.io/sync-wave: "1" }
+spec:
+  name: origination
+  owner: origination
+  cluster: { name: platform-db }
