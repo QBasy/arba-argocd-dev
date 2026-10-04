@@ -31,4 +31,8 @@ spec:
         ensure: present
         login: true
         passwordSecret: { name: scoring-db-credentials }
+      - name: pricing
+        ensure: present
+        login: true
+        passwordSecret: { name: pricing-db-credentials }
       # bot:roles:end

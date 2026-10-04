@@ -29,6 +29,17 @@ spec:
             repository: registry.arba.kz/arba/engines/pricing
             tag: "v0.1.0" # bot:tag
             digest: "sha256:c8405aae702b781360a6b482310353d80b7be219874e7a0e6fc26aab119037bc" # bot:digest
+          replicaCount: 1
+          migrate:
+            enabled: true
+          env:
+            PRICING_LOG_LEVEL: debug
+            PRICING_NATS_URL: nats://nats.broker.svc.cluster.local:4222
+            PRICING_JWT_JWKS_URL: http://identity.dev.svc.cluster.local/.well-known/jwks.json
+            PRICING_JWT_ISSUER: http://identity.dev.arba.kz
+            PRICING_JWT_AUDIENCE: arba
+          secretEnv:
+            - { name: PRICING_DATABASE_DSN, secret: pricing-db, key: dsn }
     - repoURL: http://gitlab.arba.kz/argocd/argocd-dev.git
       targetRevision: main
       ref: platform
