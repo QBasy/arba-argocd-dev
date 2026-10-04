@@ -29,6 +29,12 @@ spec:
             repository: registry.arba.kz/arba/engines/scoring
             tag: "v0.1.1" # bot:tag
             digest: "sha256:00d447cf592dda8cbfa0dc57cd17296e3891595d7e16a078a84ef544cb605871" # bot:digest
+          replicaCount: 1
+          worker:
+            enabled: false
+          migrate:
+            enabled: true                       # PreSync Job: cmd/migrate up
+          # переменные приложения читаются с префиксом ORIGINATION_ (kit/conf): ORIGINATION_<СЕКЦИЯ>_<ПОЛЕ>
           env:
             SCORING_LOG_LEVEL: debug
             SCORING_NATS_URL: nats://nats.broker.svc.cluster.local:4222
