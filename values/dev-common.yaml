@@ -1,0 +1,10 @@
+# Общие значения окружения dev для ВСЕХ сервисов. Чарт превращает их в переменные <ИМЯ_СЕРВИСА>_NATS_URL,
+# <ИМЯ_СЕРВИСА>_JWT_JWKS_URL, ... (имя сервиса = имя релиза). Свои значения сервис задаёт в .helm/values-dev.yaml.
+global:
+  env: dev
+platform:
+  natsUrl: nats://nats.broker.svc.cluster.local:4222
+  jwt:
+    jwksUrl: http://identity.dev.svc.cluster.local/.well-known/jwks.json   # пока заглушка (dev/identity-stub.yml)
+    issuer: http://identity.dev.arba.kz
+    audience: arba
