@@ -37,8 +37,16 @@ spec:
           ORIGINATION_JWT_JWKS_URL: http://identity.dev.svc.cluster.local/.well-known/jwks.json
           ORIGINATION_JWT_ISSUER: http://identity.dev.arba.kz
           ORIGINATION_JWT_AUDIENCE: arba
+          # зависимости origination (секция upstream в kit/conf): адреса сервисов внутри кластера
+          ORIGINATION_UPSTREAM_SCORING_URL: http://scoring.dev.svc.cluster.local:8080
+          ORIGINATION_UPSTREAM_PRICING_URL: http://pricing.dev.svc.cluster.local:8080
+          ORIGINATION_UPSTREAM_SERVICING_URL: http://servicing.dev.svc.cluster.local:8080
+          # OAuth client_credentials: пока identity-заглушка, поэтому адрес токена условный; client_secret — из Vault
+          ORIGINATION_UPSTREAM_TOKEN_URL: http://identity.dev.svc.cluster.local/oauth/token
+          ORIGINATION_UPSTREAM_CLIENT_ID: origination
         secretEnv:
           - { name: ORIGINATION_DATABASE_DSN, secret: origination-db, key: dsn }
+          - { name: ORIGINATION_UPSTREAM_CLIENT_SECRET, secret: origination-upstream, key: client_secret }
   destination:
     server: https://kubernetes.default.svc
     namespace: dev
