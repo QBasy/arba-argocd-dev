@@ -13,7 +13,7 @@ spec:
   project: arba
   sources:
     - repoURL: http://gitlab.arba.kz/arba/engines/pricing.git
-      targetRevision: c3a98e8af27b8b83c3cddc4e58c2c4aa8d1298fa # bot:revision
+      targetRevision: a7d4913e312a31d80025c9b29618b8fc8b3a096b # bot:revision
       path: .helm
       helm:
         releaseName: pricing
@@ -27,8 +27,8 @@ spec:
             tier: engine
           image:
             repository: registry.arba.kz/arba/engines/pricing
-            tag: "v0.1.0" # bot:tag
-            digest: "sha256:c8405aae702b781360a6b482310353d80b7be219874e7a0e6fc26aab119037bc" # bot:digest
+            tag: "v0.1.2" # bot:tag
+            digest: "sha256:a5fb52d4d90c74c77071b599b1f6e08066e6dd25dbd95b9f31eec053eb90291e" # bot:digest
           replicaCount: 1
           migrate:
             enabled: true
