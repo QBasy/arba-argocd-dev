@@ -22,8 +22,8 @@ spec:
           tier: engine
         image:
           repository: registry.arba.kz/arba/engines/origination
-          tag: "v0.2.3" # bot:tag
-          digest: "sha256:1fc57417815ec8e8e8fa1d179e47070e2d87e013374c59d9109529cb94f0b64f" # bot:digest
+          tag: "v0.2.4" # bot:tag
+          digest: "sha256:f0437b5ae7dd02b5f16f7500e7767c2d0e3c3d6b24433a96b32748cda4ca03f8" # bot:digest
         replicaCount: 1
         worker:
           enabled: false
