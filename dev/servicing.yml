@@ -29,6 +29,17 @@ spec:
             repository: registry.arba.kz/arba/engines/servicing
             tag: "v0.1.3" # bot:tag
             digest: "sha256:80369cf4e53f03a11e423a9d2cc1d3f29eaad35f914df9125e80b806a6263e91" # bot:digest
+          replicaCount: 1
+          migrate:
+            enabled: true                       # PreSync Job: cmd/migrate up
+          env:
+            SERVICING_LOG_LEVEL: debug
+            SERVICING_NATS_URL: nats://nats.broker.svc.cluster.local:4222
+            SERVICING_JWT_JWKS_URL: http://identity.dev.svc.cluster.local/.well-known/jwks.json
+            SERVICING_JWT_ISSUER: http://identity.dev.arba.kz
+            SERVICING_JWT_AUDIENCE: arba
+          secretEnv:
+            - { name: SERVICING_DATABASE_DSN, secret: servicing-db, key: dsn }
     - repoURL: http://gitlab.arba.kz/argocd/argocd-dev.git
       targetRevision: main
       ref: platform
