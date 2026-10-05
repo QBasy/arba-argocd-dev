@@ -35,4 +35,8 @@ spec:
         ensure: present
         login: true
         passwordSecret: { name: pricing-db-credentials }
+      - name: servicing
+        ensure: present
+        login: true
+        passwordSecret: { name: servicing-db-credentials }
       # bot:roles:end
