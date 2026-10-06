@@ -12,7 +12,7 @@ spec:
   project: arba
   source:
     repoURL: http://gitlab.arba.kz/arba/engines/origination.git
-    targetRevision: 372403479895f472cf67d3312f7bd5645f1c1854 # bot:revision
+    targetRevision: e3053fded1ffb7b095e71af9c86908fd50df6d2c # bot:revision
     path: .helm
     helm:
       releaseName: origination
@@ -22,8 +22,8 @@ spec:
           tier: engine
         image:
           repository: registry.arba.kz/arba/engines/origination
-          tag: "v0.2.4" # bot:tag
-          digest: "sha256:f0437b5ae7dd02b5f16f7500e7767c2d0e3c3d6b24433a96b32748cda4ca03f8" # bot:digest
+          tag: "v0.2.5" # bot:tag
+          digest: "sha256:9b0c0e00bd3faae0ee74602a4b2b07384da65ad3c99b078ec462eac02307d44e" # bot:digest
         replicaCount: 1
         worker:
           enabled: false
