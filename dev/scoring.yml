@@ -13,7 +13,7 @@ spec:
   project: arba
   sources:
     - repoURL: http://gitlab.arba.kz/arba/engines/scoring.git
-      targetRevision: 5a08a9563702bdbb10689d7105e6d2baf34ce91d # bot:revision
+      targetRevision: 448d1cfa990e8902f960a087264e4c7219794079 # bot:revision
       path: .helm
       helm:
         releaseName: scoring
@@ -27,8 +27,8 @@ spec:
             tier: engine
           image:
             repository: registry.arba.kz/arba/engines/scoring
-            tag: "v0.2.2" # bot:tag
-            digest: "sha256:9d21894cad154ee63244785db44cf2cc0c00a96a44ec567489576716b867f260" # bot:digest
+            tag: "v0.3.1" # bot:tag
+            digest: "sha256:29dc97481c4228764fa96bed41940fafebc62457901ba37801020509663c5819" # bot:digest
           replicaCount: 1
           worker:
             enabled: false
