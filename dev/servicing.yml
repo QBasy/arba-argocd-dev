@@ -13,7 +13,7 @@ spec:
   project: arba
   sources:
     - repoURL: http://gitlab.arba.kz/arba/engines/servicing.git
-      targetRevision: bde2b2a27b386279562d3f0817df7254fa96aaba # bot:revision
+      targetRevision: de1c368393702c880e7bf976b707cc019589ba26 # bot:revision
       path: .helm
       helm:
         releaseName: servicing
@@ -27,8 +27,8 @@ spec:
             tier: engine
           image:
             repository: registry.arba.kz/arba/engines/servicing
-            tag: "v0.1.3" # bot:tag
-            digest: "sha256:80369cf4e53f03a11e423a9d2cc1d3f29eaad35f914df9125e80b806a6263e91" # bot:digest
+            tag: "v0.3.1" # bot:tag
+            digest: "sha256:f00ba9c58aecdd283cfab9b7a6703325db115ac41b89bece3302a33f7a672a81" # bot:digest
           replicaCount: 1
           migrate:
             enabled: true                       # PreSync Job: cmd/migrate up
